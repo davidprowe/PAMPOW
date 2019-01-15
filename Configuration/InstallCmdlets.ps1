@@ -27,5 +27,3 @@ if(-not (Get-PSSnapin | Where-Object {$_.Name -eq 'FIMAutomation'}))
 
 Import-Module "C:\Program Files\Microsoft Forefront Identity Manager\2010\Service\Microsoft.ResourceManagement.Automation.dll"
 Import-Module FimPowerShell.psm1
-
-Import-Module "C:\Program Files\Microsoft Forefront Identity Manager\2010\Service\PAM\PowerShell\Modules\MIMPAM\MIMPAM.psd1"

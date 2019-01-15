@@ -1,3 +1,49 @@
+#going to chgange this one to get-pampowrole - add candidates to 
+function GET-PAMPOWRole{
+	#shows "memberof" roles where "rolename" is similar to memberof.  Reminds me of get-aduser -identity NAME -properties memberof
+	#if you list a single role in the displayname parameter, it shows the members of that role/group
+	param(
+	[string]$RoleID,
+	[string]$Displayname,
+	[string]$Session,
+	[string]$Active,
+	[int]$TTL
+	#right now only seconds works[]$TimeFunction 3600 is 1 hr 28800 is 8 hr... so on
+	#todo:eq, lt, ge...
+
+	)
+	
+	$roles = get-pamrole
+	if ($psboundparameters.containskey('RoleID')){
+			foreach ($role in $roles){
+				if($role.RoleID -like "$RoleID"){
+				#$role
+				   $grp = $role
+				}
+				}
+
+		$grp
+		}
+	if ($psboundparameters.containskey('TTL')){
+	$grp = @()
+			foreach ($role in $roles){
+				if($role.TTL -eq "$TTL"){
+				#$role report back all groups with proper ttl
+				   $grp += $role
+				}
+				}
+
+		$grp
+		}	
+		
+	
+
+
+}
+
+
+
+
 function GET-PAMPOWRoleCandidates{
 	#shows "memberof" roles where "rolename" is similar to memberof.  Reminds me of get-aduser -identity NAME -properties memberof
 	#if you list a single role in the displayname parameter, it shows the members of that role/group
@@ -8,6 +54,7 @@ function GET-PAMPOWRoleCandidates{
 
 
 	)
+	
 	$roles = get-pamrole
 	if ($psboundparameters.containskey('DisplayName')){
 			foreach ($role in $roles){
