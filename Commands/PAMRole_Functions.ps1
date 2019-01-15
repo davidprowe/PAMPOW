@@ -2,6 +2,7 @@
 function GET-PAMPOWRole{
 	#shows "memberof" roles where "rolename" is similar to memberof.  Reminds me of get-aduser -identity NAME -properties memberof
 	#if you list a single role in the displayname parameter, it shows the members of that role/group
+	#need - create new object almost exact output to get-pamrole, just change output of candidates list to candidatesprivacctsid and candidatesprivaccountname and privaccountdisplayname
 	param(
 	[string]$RoleID,
 	[string]$Displayname,
@@ -97,6 +98,9 @@ function GET-PAMPOWRoleCandidates{
 }
 
 Function Get-PAMPOWRolesForUser {
+	<#
+	TODO - add search functions for the function parameters:$PrivAccountSID, SourceAccountName, PrivAccountName
+	#>
 	#lists  users and maps the roles they are in
 	param (
 	[string]$SourceDisplayname,
@@ -175,96 +179,13 @@ Function Get-PAMPOWRolesForUser {
 
 }
 
-function Remove-PAMPOWMRoleFromUser
-{
-    [cmdletBinding()]
-    param
-    (
-        [Object]
-        [Parameter(Mandatory=$true)]
-        $User,
-        [Object]
-        [Parameter(Mandatory=$true)]
-        $Role
-    )
-    $Candidates = $PAMRole.Candidates
-    $CandidateList = @()
-	#test pamuser specified in function
-	try{
-		Get-PAMUser -sourceaccountname $user.SourceAccountName
-		}
-	Catch{
-		try {$User = get-pamuser -sourceaccountname $User}
-		catch {
-			try{$user = get-pamuser -PrivAccountName $user}
-			catch{write-error "User Not found specified by User param"
-			break}
-		}
-		
-		
-		}
-	#test pamrole specified in function	
-	try{
-		get-pamrole -displayname $role.displayname}
-	catch{
-		$Role = get-pamrole -displayname $role
-		
-			if($role.count -eq 0){
-			write-error "No Role found specified by role parameter"
-			exit}
-	}
-		
-    foreach($Candidate in $Candidates)
-    {
-        if ($Candidate.PrivUserResourceId -ne $User.PrivUserResourceId)
-        {
-            $CandidateList += $Candidate
-        }
-    }
-    Set-PAMRole -Role $Role -Candidates $CandidateList | Out-Null
-}
-
-function Add-PAMPOWRoleToUser
-{
-    [cmdletBinding()]
-    param
-    (
-        [Object]
-        [Parameter(Mandatory=$true)]
-        $User,
-        [Object]
-        [Parameter(Mandatory=$true)]
-        $Role
-    )
-	#test pamuser specified in function
-	try{
-		Get-PAMUser -sourceaccountname $user.SourceAccountName
-		}
-	Catch{
-		try {$User = get-pamuser -sourceaccountname $User}
-		catch {
-			try{$user = get-pamuser -PrivAccountName $user}
-			catch{write-error "User Not found specified by User param"
-			break}
-		}
-		
-		
-		}
-	#test pamrole specified in function	
-	try{
-		get-pamrole -displayname $role.displayname}
-	catch{
-		$Role = get-pamrole -displayname $role
-			if($role.count -eq 0){
-			write-error "No Role found specified by role parameter"
-			break}
-	}
-	
-    $Candidates = $PAMRole.Candidates + $PAMUser
-    Set-PAMRole -Role $PAMRole -Candidates $Candidates | Out-Null
-}
 
 
+<#
+TODO:
+New-pamrole -privileges switch has to point to a full stored value of a pamgroup.  Change it so that it only has to have a groups priv account sid, source account sid, or source account name or priv display name
+When new-pamrole is created, by default the creator creating the role is added to the candidate list.  By default on the new script, remove this user from candidacy - call function: remove-pampowuserfromrole -user $env:USERNAME -role ($displayname)
+#>
 
 
 

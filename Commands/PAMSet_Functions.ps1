@@ -11,6 +11,8 @@ Function Get-PAMPOWSet {
 		[string]$ComputedMember,
 		[bool]$listMembers
 		)
+		#TODO, convert by default the member list to readable form instead of using the listmembers switch
+		#todo on list members if account not found, output not found ex: admin account that was deleted out of PAM still isted as pam administrators
 		
 	$Pamset = get-pamset
 

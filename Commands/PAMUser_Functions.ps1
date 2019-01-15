@@ -75,6 +75,7 @@ function Add-PAMPOWUserToRole
 		
 		
 		}
+		
 	#test pamrole specified in function	
 	try{
 		get-pamrole -displayname $role.displayname}
@@ -85,8 +86,36 @@ function Add-PAMPOWUserToRole
 			break}
 	}
 	
+	
     $Candidates = $Role.Candidates + $user
+	
     Set-PAMRole -Role $Role -Candidates $Candidates | Out-Null
+	$output = get-pamrole -displayname $Role.displayname|select Displayname, Description, Approvers, Candidates
+		
+		$PAMRoleOutput = New-Object PSObject -Property @{
+				Displayname = $output.displayname
+				Description = $output.Description
+				Approvers = $output.Approvers.PrivAccountname
+				Candidates = $output.Candidates.PrivAccountname
+						
+		}
+		<# 
+		$PamRoleObjectCandidateOutput = @()
+		write-host Candidate list for $output.displayname is set to:
+		foreach ($c in $pamroleoutput.candidates){
+				$PamRoleObjectCandidateOutput += @{
+				#Displayname = $output.displayname; `
+				#Description = $output.Description; `
+				#Approvers =$output.Approvers.PrivAccountname; `
+				CandidatePrivAccountName = $C
+						}
+		
+		
+		}
+		$PamRoleObjectCandidateOutput #>
+		$PAMRoleOutput	|select Displayname, description, approvers, candidates| fl
+	
+	
 }
 
 
