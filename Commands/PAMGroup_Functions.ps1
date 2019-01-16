@@ -15,4 +15,6 @@ ex from new-pamgroup
     When the PrivOnly parameter is specified, this command creates a representation in the MIM Service for a security group which already 
     exists in the PAM domain.  The value of the SourceDomain parameter must be the same as the PAM domain name.
 
+	
+	TODO ; Let do by default search the priv domain for the group.  If the group does 
 #>

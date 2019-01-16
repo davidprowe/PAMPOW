@@ -49,6 +49,12 @@ function Remove-PAMPOWUserFromRole
     Set-PAMRole -Role $Role -Candidates $CandidateList | Out-Null
 }
 
+<#
+get-pampow user filer by, priv acctname, priv upn, priv displayname, priv accoutsid, priv user resourceid, source acctname, source displayname, source domain
+how to list domains?
+#>
+
+
 function Add-PAMPOWUserToRole
 {
     [cmdletBinding()]
@@ -101,7 +107,7 @@ function Add-PAMPOWUserToRole
 		}
 		<# 
 		$PamRoleObjectCandidateOutput = @()
-		write-host Candidate list for $output.displayname is set to:
+		write-host "Candidate list for $output.displayname is set to:"
 		foreach ($c in $pamroleoutput.candidates){
 				$PamRoleObjectCandidateOutput += @{
 				#Displayname = $output.displayname; `
